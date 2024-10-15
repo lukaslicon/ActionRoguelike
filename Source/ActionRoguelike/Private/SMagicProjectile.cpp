@@ -29,7 +29,6 @@ void ASMagicProjectile::PostInitializeComponents()
 	SphereComp->OnComponentBeginOverlap.AddDynamic(this, &ASMagicProjectile::OnActorOverlap);
 }
 
-
 void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor && OtherActor != GetInstigator())
@@ -44,19 +43,22 @@ void ASMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent,
 			return;
 		}
 
-		// Apply Damage & Impulse
-		if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, GetDamageAmount(), SweepResult))
-		{
-			// We only explode if the target can be damaged, it ignores anything it Overlaps that it cannot Damage (it requires an AttributeComponent on the target)
-			Explode();
-
-			if (ActionComp && GetBurningActionClass() && HasAuthority())
+		if (CheckInstigator(OtherActor)) {		// Apply Damage & Impulse
+			if (USGameplayFunctionLibrary::ApplyDirectionalDamage(GetInstigator(), OtherActor, GetDamageAmount(), SweepResult))
 			{
-				ActionComp->AddAction(GetInstigator(), GetBurningActionClass());
+				UE_LOG(LogTemp, Warning, TEXT("Enemy or Player Hit: %s"), *OtherActor->GetName())
+					Explode(); // Only explode if the hit actor is valid for damage
+
+				if (ActionComp && GetBurningActionClass() && HasAuthority())
+				{
+					ActionComp->AddAction(GetInstigator(), GetBurningActionClass());
+				}
 			}
 		}
 	}
 }
+
+
 
 
 #if WITH_EDITOR

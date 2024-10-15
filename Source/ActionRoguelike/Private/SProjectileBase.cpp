@@ -97,6 +97,12 @@ void ASProjectileBase::PoolEndPlay_Implementation()
 	AudioComp->SetPaused(true);
 }
 
+bool ASProjectileBase::CheckInstigator(AActor* OtherActor)
+{
+	return GetInstigator()->ActorHasTag("Player") && OtherActor->ActorHasTag("Enemy") || GetInstigator()->ActorHasTag("Enemy") && OtherActor->ActorHasTag("Player");
+}
+
+
 
 void ASProjectileBase::LifeSpanExpired()
 {
@@ -107,7 +113,8 @@ void ASProjectileBase::LifeSpanExpired()
 
 void ASProjectileBase::OnActorHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	Explode();
+	UE_LOG(LogTemp, Warning, TEXT("OnHit Exploded at Actor: %s"), *OtherActor->GetName());
+	Explode(); // Only explode if the hit actor is valid for damage
 }
 
 

@@ -20,4 +20,3 @@ EBTNodeResult::Type USBTTask_HealSelf::ExecuteTask(UBehaviorTreeComponent& Owner
 
 	return EBTNodeResult::Succeeded;
 }
-

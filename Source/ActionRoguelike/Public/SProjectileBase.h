@@ -90,6 +90,7 @@ public:
 
 	virtual void PoolEndPlay_Implementation() override;
 	
+	bool CheckInstigator(AActor* OtherActor);
 #if WITH_EDITORONLY_DATA
 	//~ These properties are moving out to the FMySparseClassData struct:
 	private:
